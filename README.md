@@ -31,15 +31,22 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\ts8xxx-dev-plugin\install.
 需要本机有 pnpm，且 DSH 具备插件安装权限：
 
 ```powershell
-dsh plugin --profile desktop add github:<owner>/ts8xxx-dev-plugin
+dsh plugin --profile desktop add github:D-Lobster/ts8xxx-dev-plugin
 ```
 
 安装后按提示重启宿主；后续用 `dsh plugin --profile desktop list` 查看。
 
-### 方式三：本地目录 / Git clone
+### 方式三：插件市场
+
+本仓库已打上 GitHub topic `dsh-plugin`，会被 DSH 插件市场/索引按 topic 自动聚合；
+市场安装即等价于上面的 github 源安装。若你的客户端支持「发现 → 索引源」，
+也可直接把本仓库地址加为插件源。
+
+
+### 方式四：本地目录 / Git clone
 
 ```powershell
-git clone https://github.com/<owner>/ts8xxx-dev-plugin.git
+git clone https://github.com/D-Lobster/ts8xxx-dev-plugin.git
 # 直接运行仓库根目录的 install.ps1（本仓库根目录即插件包）
 powershell -NoProfile -ExecutionPolicy Bypass -File .\ts8xxx-dev-plugin\install.ps1 -NoCopy
 ```

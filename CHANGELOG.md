@@ -2,6 +2,15 @@
 
 版本号与 TS8XXX 工作流版本（`workflow.manifest.json` 的 `workflow_version`）保持一致。
 
+## v2.2.1
+
+插件市场收录准备：
+
+- 新增 `index.js` 导出 `apply(ctx)`（市场收录要求；bundle patch 层本身不产生 Host 行，
+  该导出为兼容性空实现）；
+- `package.json` 增加 `main`/`exports` 与 `dsh-plugin` 等 keywords；
+- GitHub 仓库添加 `dsh-plugin` topic（市场按 topic 自动聚合）。
+
 ## v2.2.0
 
 插件家族化重命名（为后续芯片与 SDK 版本预留）：

@@ -1,10 +1,15 @@
 {
     "name":  "ts8xxx-dev-plugin",
-    "version":  "2.2.0",
+    "version":  "2.2.1",
     "type":  "module",
+    "main":  "./index.js",
+    "exports":  {
+                    ".":  "./index.js"
+                },
     "description":  "TS8XXX series development plugin for DeepSeek Harness: agent preset + TS800X BLE firmware workflow skills (patch layer only).",
     "keywords":  [
                      "dsh",
+                     "dsh-plugin",
                      "deepseek-harness",
                      "ts800x",
                      "ts8xxx",
