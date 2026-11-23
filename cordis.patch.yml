@@ -1,0 +1,208 @@
+# The `ts8xxx-dev` agent preset: TS8XXX series BLE firmware development workflow.
+#
+# DSH >= 0.1.7 does not read the retired `$DSH_HOME/.agent-presets/<id>/`
+# directory any more: an agent preset is a `@deepseek-ai/dsh-agent-preset`
+# declaration carried by a patch layer. This file IS that declaration, held in
+# the shape the shipped `@deepseek-ai/dsh-web-app` presets use, so it can be
+#   (a) merged into `<profile>/cordis.patch.yml` -- what
+#       `sync_dsh_preset.ps1` / `install.ps1` do; no pnpm or bundle install
+#       needed and the profile patch layer reloads live, or
+#   (b) shipped as the patch of the local bundle beside this file
+#       (`package.json`) and installed with the DSH plugin manager.
+# Doing both declares the same preset id twice: pick exactly one.
+#
+# The composition mirrors the shipped `standard` preset of the installed
+# `dsh-web-app` bundle (the version-validated row set), with the TS8XXX
+# workflow persona instead of the generic one. Re-check row names against
+# `presets/standard.patch.yml` of the installed bundle after a DSH update:
+# a plugin package renamed upstream fails activation.
+#
+# Deliberate differences from the shipped `standard` preset:
+#   * persona  -> TS8XXX workflow rules, priorities, loops and red lines
+#   * tool-ralph -> enabled (multi-round autonomous runs)
+#   * tool-web -> `fetch: false` (search only; no page fetching)
+- insert:
+    - id: preset-ts8xxx-dev
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: ts8xxx-dev
+        name: TS8XXX 系列开发
+        order: 10
+        description: >-
+          TS8XXX 系列芯片 BLE 固件开发工作流预设（当前支持 TS800X / SDK V1.5–V1.6，
+          后续在同插件内扩展新芯片与 SDK 版本）。装配 TS800X 全局技能
+          （R01-R29 编码规范、构建/烧录/日志/OTA/功耗、团队编排与终审），
+          注入规范优先级、模块闭环、证据与烧录策略，
+          并保留标准编码 Agent 的全部工具（Shell、文件、检索、Skills、
+          计划、目标、子代理与工作流）。
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              # `prefix` (was `text`) + optional `suffix`. Only prompt variables
+              # registered by this DSH version interpolate (provider, model);
+              # the working directory is not one of them and comes from the
+              # session context instead.
+              prefix: >-
+                你是运行在 DeepSeek Harness 上的 TS800X BLE 固件开发 Agent（{{model}} 模型）。
+
+                你遵循 TS800X 统一工作流。规范仓库由环境变量 TS800X_WORKFLOW_ROOT 指向
+                （ts800x_workflow_for_ai），规范优先级：workflow.manifest.json →
+                WORKFLOW.md → RULES/CODING_STANDARD.md（R01-R29）→ RULES/REVIEW_CHECKLIST.md。
+                全局 TS800X 技能已装配（ts800x-workflow、ts800x-coding-standard、
+                ts800x-team-orchestrator、ts800x-build、ts800x-flash、ts800x-uart-download、
+                ts800x-ble-ota、ts800x-log-system、ts800x-code-quality、ts800x-dependency-analyzer、
+                ts800x-final-reviewer、ts800x-code-reader、ts800x-static-analysis 等），
+                按任务关键词加载对应技能正文后执行，不凭记忆编造规则。
+
+                模块正式完成/交付时执行闭环：
+                prebuilt/examples → 实现并集成 → build 0/0 → 按需 JLink/UART/OTA 快速验证 →
+                ts800x-code-quality → 回归 build 0/0 → 依赖报告 → 日志/硬件验证 → final-reviewer。
+                日常迭代走轻量闭环：修改 → build 0/0 → 按需烧录 verify → 日志/行为验证；
+                开发测试烧录不强制 Gate，但写入工具必须做地址/范围/verify 校验。
+
+                硬性红线（R01-R29 摘要）：SDK 只读、应用代码在 APP/；写驱动前先查
+                prebuilt_modules 与 SDK examples；禁 malloc/free 与阻塞延时（delay_ms/HAL_Delay）；
+                ISR 禁 LOG、Flash、等待与复杂处理；固件 LOG 仅可打印 ASCII；
+                所有启用 BLE 的应用必须内置 R27 BBTIME 存活检测（tsBle_Init() 之后的主循环轮询，
+                禁止放 ISR，阈值与复位地址集中宏定义，复位前等待有界并说明依据）；
+                每次编译后必须检查 R28 RAM 占用（RW-data + ZI-data），超过 16K（越过
+                0x20004000）时必须在 APP/include/cfg_def_app.h 启用 TS_RAM_SAVE_24K
+                （系统默认休眠只保留 16K，超限不开会导致休眠后数据丢失、唤醒异常）；
+                所有项目（SDK 1.5/1.5.1/1.6）必须按 R29 用 -O1 编译：Target <Optim>=1、
+                不得保留按文件的优化等级覆盖、ISR 与主循环共享变量必须 volatile，
+                改配置后须全量 Rebuild 并核对 .dep 实际 -O 标志（等级错误会导致任务停摆）；
+                编译需 0 Error / 0 Warning 且产物新鲜非空；无真机日志不得声称硬件成功，
+                无硬件时写结构化 [待硬件验证]（含测试步骤与验收标准）；
+                状态写入目标项目 PROGRESS.md/TODO.md/MEMORY.md/context/，交接用 context/handoffs/；
+                默认在功能分支工作；用户说暂停时立即停止并汇报当前清单。
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: tool-bash
+            name: '@deepseek-ai/dsh-tool-bash'
+            disabled: !!js process.platform === 'win32'
+          - id: tool-pwsh
+            name: '@deepseek-ai/dsh-tool-pwsh'
+            disabled: !!js process.platform !== 'win32'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              sampleOverCapGlobResults: false
+          - id: tool-jobs
+            name: '@deepseek-ai/dsh-tool-jobs'
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: command-goal
+            name: '@deepseek-ai/dsh-command-goal'
+          - id: tool-goal
+            name: '@deepseek-ai/dsh-tool-goal'
+          - id: planning
+            name: cordis:group
+            group: true
+            isolate:
+              planMode: true
+            config:
+              - id: plan-mode
+                name: '@deepseek-ai/dsh-plan-mode'
+                config:
+                  section: |
+                    You are in plan mode. Stay in plan mode until exit_plan_mode succeeds or the user switches the session mode. Imperative language to implement changes means plan the implementation, not execute it. A user's conversational agreement — including an answer confirming something you asked — approves nothing and does not end plan mode; fold the confirmed decision into the plan and submit it through exit_plan_mode.
+
+                    Explore first. Use non-mutating reads, searches, static analysis, and checks to ground the plan in the actual repository. Do not edit or write files, change configuration, run formatters or code generation that rewrites tracked files, commit, or otherwise carry out the plan. Prefer existing functions and patterns over new machinery.
+
+                    The tool catalog stays the same across modes for request-cache stability. These plan-mode rules override any later tool description or guidance that suggests using mutation tools; those tools remain listed to keep the tool catalog unchanged. Do not use todo_write to track this planning phase: it tracks implementation after an approved plan, while the plan itself belongs in exit_plan_mode.
+
+                    Resolve discoverable facts by inspection. Use ask_user_question only for user-owned choices or material ambiguity that inspection cannot answer. Do not ask the user where code lives or how current behavior works when you can find out.
+
+                    Make the plan decision-complete: state the goal and success criteria; group implementation changes by subsystem; identify public API, schema, and data-flow changes; cover edge cases, failure modes, tests, acceptance criteria, and explicit assumptions. Keep it concise enough to review but detailed enough that another engineer can implement it without making design decisions.
+
+                    When ready, call exit_plan_mode with the complete plan markdown, starting with a # title. Make exit_plan_mode the only and final tool call in that assistant response: it presents the plan for approval, and implementation begins only in a later step after approval. Do not paste the final plan as a plain reply or ask "should I proceed?" through prose or ask_user_question. If review rejects it, incorporate the feedback and present again. If the review channel is unavailable or aborted, stay in plan mode and ask the user to switch modes manually; do not proceed with implementation.
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+          - id: delegation
+            name: cordis:group
+            group: true
+            isolate:
+              workflowEngine: true
+            config:
+              - id: tool-subagent-control
+                name: '@deepseek-ai/dsh-tool-subagent-control'
+              - id: tool-subagent-list-agents
+                name: '@deepseek-ai/dsh-tool-subagent-control/list-agents'
+              - id: tool-subagent
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: spawn
+                  toolName: subagent
+                  modelSelectionSettings: true
+                  backgroundMode: continuable
+              - id: tool-subagent-fork
+                name: '@deepseek-ai/dsh-tool-subagent'
+                config:
+                  provider: fork
+                  toolName: subagent_fork
+                  backgroundMode: continuable
+              - id: tool-subagent-codex
+                name: '@deepseek-ai/dsh-tool-subagent'
+                disabled: true
+                config:
+                  provider: codex
+                  toolName: subagent_codex
+                  backgroundMode: one-shot
+                  maxDepth: provider-managed
+              - id: tool-subagent-claude-code
+                name: '@deepseek-ai/dsh-tool-subagent'
+                disabled: true
+                config:
+                  provider: claude-code
+                  toolName: subagent_claude_code
+                  backgroundMode: one-shot
+                  maxDepth: provider-managed
+              - id: workflow-ptc
+                name: '@deepseek-ai/dsh-workflow-ptc'
+                config:
+                  provider: spawn
+              - id: tool-workflow
+                name: '@deepseek-ai/dsh-tool-workflow'
+              - id: tool-ralph
+                name: '@deepseek-ai/dsh-tool-ralph'
+                config:
+                  subagentProvider: spawn
+                  maxRounds: 64
+          - id: tool-ask-user
+            name: '@deepseek-ai/dsh-tool-ask-user'
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+            config:
+              allowParallelInProgress: true
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: false
+              searchTimeoutMs: 60000
+          - id: present
+            name: '@deepseek-ai/dsh-tool-present'
+          - id: tool-plugin-manager
+            name: '@deepseek-ai/dsh-plugin-manager/tools'
+            disabled: true

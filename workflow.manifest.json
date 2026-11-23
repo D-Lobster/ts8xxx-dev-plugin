@@ -1,0 +1,375 @@
+{
+  "schema_version": 1,
+  "workflow_version": "2.2.0",
+  "canonical_root": ".",
+  "policies": {
+    "workflow": "WORKFLOW.md",
+    "coding_standard": "RULES/CODING_STANDARD.md",
+    "review_checklist": "RULES/REVIEW_CHECKLIST.md",
+    "host_compatibility": "HOSTS.md"
+  },
+  "hosts": {
+    "pi": {
+      "instructions": "AGENTS.md",
+      "global_skills": "~/.agents/skills",
+      "project_skills": [
+        "ts800x-workflow",
+        "ts800x-coding-standard",
+        "ts800x-team-orchestrator",
+        "ts800x-final-reviewer",
+        "ts800x-build",
+        "ts800x-uart-download",
+        "ts800x-flash",
+        "ts800x-log-system",
+        "ts800x-code-quality",
+        "ts800x-ble-ota",
+        "ts800x-ble-test",
+        "ppk2-power-measure",
+        "ts800x-dependency-analyzer",
+        "ts800x-code-reader",
+        "ts800x-sdk-bug-reference",
+        "ts800x-static-analysis",
+        "ts800x-faq"
+      ],
+      "extension_source": "adapters/pi/ts800x-workflow-hooks.ts",
+      "extension_target": "~/.pi/agent/extensions/ts800x-workflow-hooks.ts"
+    },
+    "claude": {
+      "instructions": "CLAUDE.md",
+      "global_skills": "~/.claude/skills",
+      "project_adapter": ".claude-plugin"
+    },
+    "codex": {
+      "instructions": "AGENTS.md",
+      "global_skills": "~/.codex/skills"
+    },
+    "powershell": {
+      "entry": "workflow.ps1",
+      "hook_runner": ".claude-plugin/hooks/run-hook.ps1"
+    },
+    "deepseek": {
+      "instructions": "DEEPSEEK.md",
+      "global_skills": "~/.agents/skills",
+      "preset_source": "adapters/deepseek/ts8xxx-dev",
+      "preset_id": "ts8xxx-dev",
+      "preset_patch": "cordis.patch.yml",
+      "preset_profiles_root": "~/.dsh/profiles",
+      "preset_profile": "desktop"
+    },
+    "opencode": {
+      "instructions": "AGENTS.md",
+      "plugin_source": "adapters/opencode/ts800x-workflow",
+      "global_config": "~/.config/opencode/opencode.json",
+      "setup_script": "setup_opencode.ps1"
+    },
+    "kimi": {
+      "instructions": "AGENTS.md",
+      "global_skills": "~/.kimi-code/skills",
+      "kimi_home": "~/.kimi-code",
+      "plugin_source": "adapters/kimi/ts800x-workflow",
+      "plugin_id": "ts800x-workflow",
+      "session_start_skill": "using-ts800x-workflow",
+      "generator": "update_kimi_plugin.ps1",
+      "setup_script": "setup_kimi.ps1"
+    }
+  },
+  "skills": [
+    {
+      "name": "docx-generator",
+      "source": ".claude-plugin/skills/docx-generator",
+      "mode": "manual"
+    },
+    {
+      "name": "ts800x-architect",
+      "source": "_hook_skills/ts800x-architect",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-ble-ota",
+      "source": "_hook_skills/ts800x-ble-ota",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-ble-test",
+      "source": "_hook_skills/ts800x-ble-test",
+      "mode": "auto"
+    },
+    {
+      "name": "ppk2-power-measure",
+      "source": "_hook_skills/ppk2-power-measure",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-build",
+      "source": "_hook_skills/ts800x-build",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-code-quality",
+      "source": "_hook_skills/ts800x-code-quality",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-code-reader",
+      "source": "_hook_skills/ts800x-code-reader",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-coding-standard",
+      "source": "_hook_skills/ts800x-coding-standard",
+      "mode": "always"
+    },
+    {
+      "name": "ts800x-dependency-analyzer",
+      "source": "_hook_skills/ts800x-dependency-analyzer",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-engineering-ops",
+      "source": "_hook_skills/ts800x-engineering-ops",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-faq",
+      "source": "_hook_skills/ts800x-faq",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-final-reviewer",
+      "source": "_hook_skills/ts800x-final-reviewer",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-flash",
+      "source": "_hook_skills/ts800x-flash",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-log-system",
+      "source": "_hook_skills/ts800x-log-system",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-maintenance",
+      "source": "_hook_skills/ts800x-maintenance",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-memory-handoff",
+      "source": "_hook_skills/ts800x-memory-handoff",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-module-dev",
+      "source": "_hook_skills/ts800x-module-dev",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-static-analysis",
+      "source": "_hook_skills/ts800x-static-analysis",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-requirements-analyst",
+      "source": "_hook_skills/ts800x-requirements-analyst",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-rigorous-test",
+      "source": "_hook_skills/ts800x-rigorous-test",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-sdk-bug-reference",
+      "source": "_hook_skills/ts800x-sdk-bug-reference",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-team-orchestrator",
+      "source": ".claude-plugin/skills/ts800x-team-orchestrator",
+      "mode": "manual"
+    },
+    {
+      "name": "ts800x-uart-download",
+      "source": "_hook_skills/ts800x-uart-download",
+      "mode": "auto"
+    },
+    {
+      "name": "ts800x-workflow",
+      "source": "_hook_skills/ts800x-workflow",
+      "mode": "always"
+    },
+    {
+      "name": "using-ts800x-workflow",
+      "source": ".claude-plugin/skills/using-ts800x-workflow",
+      "mode": "manual"
+    },
+    {
+      "name": "weizheng",
+      "source": "_hook_skills/weizheng",
+      "mode": "manual"
+    }
+  ],
+  "hooks": {
+    "session-start": [
+      "ts800x-coding-standard",
+      "ts800x-workflow"
+    ],
+    "architect": [
+      "ts800x-architect"
+    ],
+    "ble-ota": [
+      "ts800x-ble-ota"
+    ],
+    "ble-test": [
+      "ts800x-ble-test"
+    ],
+    "build": [
+      "ts800x-build"
+    ],
+    "code-quality": [
+      "ts800x-code-quality"
+    ],
+    "code-reader": [
+      "ts800x-code-reader"
+    ],
+    "coding-standard": [
+      "ts800x-coding-standard"
+    ],
+    "dependency-analyzer": [
+      "ts800x-dependency-analyzer"
+    ],
+    "engineering-ops": [
+      "ts800x-engineering-ops"
+    ],
+    "faq": [
+      "ts800x-faq"
+    ],
+    "final-reviewer": [
+      "ts800x-final-reviewer"
+    ],
+    "flash": [
+      "ts800x-flash"
+    ],
+    "log-system": [
+      "ts800x-log-system"
+    ],
+    "maintenance": [
+      "ts800x-maintenance"
+    ],
+    "memory-handoff": [
+      "ts800x-memory-handoff"
+    ],
+    "module-dev": [
+      "ts800x-module-dev"
+    ],
+    "requirements-analyst": [
+      "ts800x-requirements-analyst"
+    ],
+    "rigorous-test": [
+      "ts800x-rigorous-test"
+    ],
+    "sdk-bug-reference": [
+      "ts800x-sdk-bug-reference"
+    ],
+    "team-orchestrator": [
+      "ts800x-team-orchestrator"
+    ],
+    "uart-download": [
+      "ts800x-uart-download"
+    ],
+    "static-analysis": [
+      "ts800x-static-analysis"
+    ]
+  },
+  "claude_hooks": [
+    {
+      "hook": "build",
+      "matcher": "(?i)\\b(keil|mdk|build|compile|rebuild)\\b|编译|构建|零警告"
+    },
+    {
+      "hook": "flash",
+      "matcher": "(?i)\\b(jlink|flash|loadfile)\\b|JLink烧录|有线烧录|烧录固件|烧写固件"
+    },
+    {
+      "hook": "sdk-bug-reference",
+      "matcher": "(?i)sdk.*(bug|defect|issue)|已知缺陷|SDK异常|SDK缺陷"
+    },
+    {
+      "hook": "log-system",
+      "matcher": "(?i)\\b(rtt|uart|log|serial|segger)\\b|串口|日志|串口捕获"
+    },
+    {
+      "hook": "ble-test",
+      "matcher": "(?i)ble.*(test|scan)|ble_test|BLE测试|BLE扫描|蓝牙测试|蓝牙扫描"
+    },
+    {
+      "hook": "code-reader",
+      "matcher": "(?i)\\b(sdk|hal)\\b|code.?reading|code.?map|codebase|模块初始化|外设配置|驱动阅读|理解驱动|代码阅读|理解代码|代码结构|调用链|代码地图|学习代码|项目分析|理解项目"
+    },
+    {
+      "hook": "maintenance",
+      "matcher": "(?i)legacy project|existing project|维护项目|老项目|修改已有代码|已有项目|导入项目"
+    },
+    {
+      "hook": "module-dev",
+      "matcher": "写模块|写驱动|驱动开发|模块开发|编写代码|实现一个|写一个|实现模块|编写模块|undefined reference|模块集成|添加源文件|链接错误|新建项目|创建项目|基于模板|新项目|从头开始"
+    },
+    {
+      "hook": "coding-standard",
+      "matcher": "参考.*项目|读取.*功能|模仿|借鉴|移植|参照|R2[4-6]|编码规范|忘记规则"
+    },
+    {
+      "hook": "code-quality",
+      "matcher": "(?i)simplify|code.?quality|代码简化|代码质量|过度设计|过度封装"
+    },
+    {
+      "hook": "dependency-analyzer",
+      "matcher": "(?i)dependency|impact|依赖分析|波及面|影响范围"
+    },
+    {
+      "hook": "faq",
+      "matcher": "(?i)faq|troubleshoot|常见问题|问题解答|报错|异常现象|不生效|无输出|无法启动|搜不到|连不上|排查"
+    },
+    {
+      "hook": "final-reviewer",
+      "matcher": "(?i)final.?review|final-reviewer|终审|最终审查|评审终审|/ts800x-final-reviewer"
+    },
+    {
+      "hook": "team-orchestrator",
+      "matcher": "(?i)agent.?team|orchestrator|ts800x.?workflow|团队协作|多角色|启动工作流"
+    },
+    {
+      "hook": "requirements-analyst",
+      "matcher": "(?i)requirements.?analyst|需求分析|需求拆解|验收标准"
+    },
+    {
+      "hook": "architect",
+      "matcher": "(?i)ts800x.?architect|架构设计|模块划分|接口定义|技术选型"
+    },
+    {
+      "hook": "engineering-ops",
+      "matcher": "(?i)engineering.?ops|工程标准化|uvprojx配置|交付打包|构建配置"
+    },
+    {
+      "hook": "rigorous-test",
+      "matcher": "(?i)rigorous.?test|严苛测试|边界测试|异常路径|测试设计"
+    },
+    {
+      "hook": "memory-handoff",
+      "matcher": "(?i)memory.?handoff|交接文件|共享白板|状态广播"
+    },
+    {
+      "hook": "uart-download",
+      "matcher": "(?i)uart.*(flash|download)|serial.*download|串口烧录|串口下载|UART烧录|UART下载"
+    },
+    {
+      "hook": "ble-ota",
+      "matcher": "(?i)ble.*(ota|flash|upgrade|download)|ota.*(flash|upgrade)|无线烧录|蓝牙烧录|空中升级|蓝牙下载|ble_ota"
+    },
+    {
+      "hook": "static-analysis",
+      "matcher": "(?i)static.?analysis|静态分析|MISRA|clang.?tidy|cppcheck|pclint|循环复杂度|圈复杂度|代码复杂度"
+    }
+  ]
+}

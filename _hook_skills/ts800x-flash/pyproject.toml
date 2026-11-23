@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ts800x-jlink-cli"
+version = "0.3.0"
+description = "TS800X JLink CLI - ts800x-flash 技能的烧录/调试/RTT 实现"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "TS800X Workflow Team"}
+]
+keywords = ["jlink", "ts800x", "debugger", "embedded", "mcu"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "pylink-square>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[project.scripts]
+ts800x-jlink = "ts800x_jlink.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ts800x_jlink"]

@@ -1,0 +1,21 @@
+{
+    "name":  "ts8xxx-dev-plugin",
+    "version":  "2.2.0",
+    "type":  "module",
+    "description":  "TS8XXX series development plugin for DeepSeek Harness: agent preset + TS800X BLE firmware workflow skills (patch layer only).",
+    "keywords":  [
+                     "dsh",
+                     "deepseek-harness",
+                     "ts800x",
+                     "ts8xxx",
+                     "ble",
+                     "firmware",
+                     "agent-preset"
+                 ],
+    "license":  "MIT",
+    "dsh":  {
+                "bundle":  {
+                               "patch":  "./cordis.patch.yml"
+                           }
+            }
+}

@@ -1,0 +1,5 @@
+# 本地/生成产物
+*.bak
+*.tmp
+dist/
+node_modules/
