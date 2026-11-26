@@ -1,6 +1,6 @@
 ---
 name: ts800x-workflow
-description: TS800X 工作流统一参考（会话启动加载 + 新项目/多模块开发入口）。统一 Codex、Claude、Pi 和 PowerShell 的阶段、证据、烧录策略、工具入口与项目内状态。
+description: TS800X 工作流统一参考（会话启动加载 + 新项目/多模块开发入口）。统一 DSH 插件的阶段、证据、烧录策略、工具入口与项目内状态。
 ---
 
 # TS800X Workflow
@@ -16,22 +16,25 @@ description: TS800X 工作流统一参考（会话启动加载 + 新项目/多�
 
 ```
 prebuilt/examples → implement/integrate → build 0/0
-→ 按需 JLink/UART/OTA 快速验证 → ts800x-code-quality
+→ 按需 JLink/UART/OTA 快速验证 → APP 扫描 + ts800x-code-quality
 → build 0/0 → dependency report → log/hardware verify
 → final-reviewer
 ```
 
-该循环用于模块正式完成，不是每次修改的强制 Gate。日常迭代直接使用 `ts800x-build`，
+按 WORKFLOW.md 选择 L1/L2/L3。L1 不要求全量质量/依赖/终审；L2 要求 APP 扫描、质量、Rebuild、依赖和回归；L3 要求全量 R01-R29 逐条证据及独立终审。高风险改动做定向检查。该循环用于模块正式完成，不是每次修改的强制 Gate。日常迭代直接使用 `ts800x-build`，
 构建成功后按需烧录 verify、读取日志并继续修改；准备提交/交付时再补齐后半段检查。
 
 ## 工具入口
 
-表中相对路径均以 `TS800X_WORKFLOW_ROOT` 为基准；各工具 Skill 中的 `<skill-dir>` 表示当前
-`SKILL.md` 所在目录，不能把占位符原样传给 shell，也不能假设当前工作目录是工作流仓库。
+表中相对路径均以工作流根为基准；DSH 插件安装时工作流根就是本 SKILL.md 的上两级目录
+（`<skill-dir>/../..`，内含 `workflow.manifest.json`、`WORKFLOW.md`、`RULES/`）。各工具
+Skill 中的 `<skill-dir>` 表示当前 `SKILL.md` 所在目录，不能把占位符原样传给 shell，
+也不能假设当前工作目录是工作流仓库。
 
 | 目的 | 入口 |
 |------|------|
-| 状态机 | `workflow.ps1` |
+| 状态 | 目标工程 context/module_status.json、PROGRESS.md |
+| APP 扫描 | scripts/audit-app.cjs |
 | 编译 | `_hook_skills/ts800x-build/build.ps1` |
 | 依赖 | `_hook_skills/ts800x-dependency-analyzer/analyze_dependencies.ps1` |
 | 可选交付审计 | `_hook_skills/ts800x-flash/pre_flash_gate.ps1` |
@@ -52,7 +55,7 @@ UART/BLE 参数；电源、休眠、唤醒和安全要求；有无硬件、JLink
 
 ### 建立项目
 
-1. `create_project.ps1` 创建目标项目，不在规范仓库内直接开发业务固件。
+1. 依据用户指定的已验证工程模板建立目标项目；未提供模板则明确缺口，不凭空生成 SDK 工程。不在插件目录内开发业务固件。
 2. 检查生成文件，初始化项目 `PROGRESS.md/TODO.md/MEMORY.md/context/`。
 3. 创建功能分支；直接使用 `main/master` 需要用户明确授权。
 4. 不加业务代码先运行基线 build，要求 0/0 和新鲜 HEX/BIN。
@@ -75,7 +78,7 @@ UART/BLE 参数；电源、休眠、唤醒和安全要求；有无硬件、JLink
 
 1. `engineering-ops` 校验工程配置和可复现构建。
 2. `rigorous-test` 覆盖启动、正常、边界、故障、低功耗、BLE 和恢复路径。
-3. `workflow.ps1 final-check` 生成最终构建/依赖状态。
+3. ts800x-build 执行 Rebuild，ts800x-static-analysis 执行全量 APP 扫描，ts800x-dependency-analyzer 输出最终依赖证据。
 4. `final-reviewer` 独立终审。
 5. 更新项目状态和交付说明；未做的硬件项必须显式列为待验证。
 

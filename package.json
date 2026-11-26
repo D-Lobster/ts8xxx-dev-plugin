@@ -1,26 +1,48 @@
 {
-    "name":  "ts8xxx-dev-plugin",
-    "version":  "2.2.1",
-    "type":  "module",
-    "main":  "./index.js",
-    "exports":  {
-                    ".":  "./index.js"
-                },
-    "description":  "TS8XXX series development plugin for DeepSeek Harness: agent preset + TS800X BLE firmware workflow skills (patch layer only).",
-    "keywords":  [
-                     "dsh",
-                     "dsh-plugin",
-                     "deepseek-harness",
-                     "ts800x",
-                     "ts8xxx",
-                     "ble",
-                     "firmware",
-                     "agent-preset"
-                 ],
-    "license":  "MIT",
-    "dsh":  {
-                "bundle":  {
-                               "patch":  "./cordis.patch.yml"
-                           }
-            }
+  "name": "ts8xxx-dev-plugin",
+  "version": "2.2.2",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "description": "TS8XXX series development plugin for DeepSeek Harness: agent preset + TS800X BLE firmware workflow skills (patch layer only).",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "ts800x",
+    "ts8xxx",
+    "ble",
+    "firmware",
+    "agent-preset"
+  ],
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "check:plugin": "node scripts/check-plugin.cjs",
+    "sync:rules": "node scripts/check-plugin.cjs --sync",
+    "test:app-audit": "node scripts/test-audit.cjs"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "workflow.manifest.json",
+    "WORKFLOW.md",
+    "AGENTS.md",
+    "GPT_REMOTE.md",
+    "RULES",
+    "TEMPLATES",
+    "_hook_skills",
+    "VERSION",
+    "scripts",
+    "install.ps1",
+    "check_preset_patch.mjs",
+    "CHANGELOG.md",
+    "LICENSE"
+  ]
 }

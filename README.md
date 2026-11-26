@@ -5,13 +5,21 @@
 加 24 个可自动路由的技能（编码规范 R01-R29、Keil 构建、JLink/UART/OTA 烧录、
 日志分析、代码质量、依赖分析、终审等）。后续新增芯片/SDK 版本时在同一插件内扩展技能。
 
-- 版本：见 [`VERSION`](VERSION)（跟随工作流版本）
+- 版本：见 [`VERSION`](VERSION)（独立插件版本）
 - 许可：[MIT](LICENSE)
 - 依赖：Windows + PowerShell 5.1+、已安装 DeepSeek Harness（无需 pnpm、无需 npm）
 
 安装后，新建会话时在预设选择器里选择「**TS8XXX 系列开发**」，agent 即按 TS8XXX 工作流
 执行：模块闭环（build 0/0 → 烧录 verify → 日志/硬件验证 → code-quality → 终审），
 硬性红线（SDK 只读、ISR 禁 LOG/Flash、R27 BBTIME 存活检测、R28 RAM 24K、R29 -O1 编译等）。
+
+## 开发模式
+
+L1 日常修改、编译、测试烧录走快速闭环；L2 模块完成执行质量/依赖/回归；L3 客户交付执行 R01-R29 逐条证据与独立终审。详见 WORKFLOW.md。
+
+## GPT 远程开发
+
+ChatGPT 可通过已授权的 Remote Desktop Commander 读取本包 Skill 并在 Windows 上执行同一工具链；这不是 ChatGPT 原生 DSH 插件安装。使用方法见 [GPT_REMOTE.md](GPT_REMOTE.md)。
 
 ## 安装
 
@@ -78,6 +86,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\ts8xxx-dev-plugin\install.
 # 卸载（移除托管块、技能链接、安装目录）
 .\install.ps1 -Uninstall
 ```
+
+## 维护检查
+
+Node.js 运行 npm run sync:rules、npm run check:plugin、npm run test:app-audit；实际 APP 扫描入口见 ts800x-static-analysis。旧工作流仓库不再作为发布源。
 
 ## 包内结构
 

@@ -5,6 +5,10 @@ description: TS800X 已有项目维护流程。用于修 bug、加功能、重�
 
 # TS800X 已有项目维护
 
+## L1 快速通道
+
+明确的日常修改按 WORKFLOW.md L1，仅做定向阅读/风险检查、build 0/0 与按需烧录验证；不强制全量 Code Map、依赖分析、终审。下列完整步骤用于 L2/L3 或需要深入排查的任务。
+
 ## 开始前
 
 1. 检查 `git status`；所有未提交修改都视为用户资产，不覆盖、不清理。
@@ -45,7 +49,7 @@ description: TS800X 已有项目维护流程。用于修 bug、加功能、重�
 1. 最终 build 0/0。
 2. `git diff` 与变更后依赖分析。
 3. 检查原有功能、错误路径、低功耗和协议兼容性。
-4. 运行 `workflow.ps1 final-check` 和 `ts800x-final-reviewer`。
+4. L3 执行 ts800x-build Rebuild、全量 APP 扫描、依赖分析和 ts800x-final-reviewer；日常维护按 L1。
 5. 更新项目状态，列出基线旧问题、已修问题和剩余风险。
 
 未明确要求时不提交、不推送；不得用破坏性 Git 命令恢复用户工作区。

@@ -31,10 +31,15 @@ description: TS800X 应用代码静态分析与复杂度/MISRA 合规审查（�
      `grep -nE "GPIO2" APP/ | grep -iE "pwm|timer|Set_Func.*7"`（命中后人工确认语义）。
    - GPIO0/GPIO1（SWCLK/SWDIO）被改作 GPIO/PWM 时，确认 SWD 调试已确认放弃。
 
+## 随包基础扫描
+
+在目标工程执行：node "<plugin-root>/scripts/audit-app.cjs" "<project-root>" "<project-root>/context/handoffs/<module>/app_audit.json"。
+扫描实际 APP 下 C/H 源码，输出位置、基础规则候选、函数代码行与直接调用图近似深度。退出码 0 仅表示扫描成功，不表示合规；所有命中和无法解析的内容必须人工复核。动态分发、条件编译、宏生成、间接调用及 SDK 内部不计为已验证。未执行或 APP 不存在则记录未检查。
+
 ## 流程
 
 1. 确认目标文件/模块与范围（新改动优先，全量可选）。
-2. 有工具 → 跑工具，收集并过滤误报；无工具 → 规则审查。
+2. 先运行随包基础扫描；有独立分析器再运行并过滤误报；无独立分析器则人工规则审查。
 3. 逐项给出 `file:line`、严重度、证据、建议，白名单项记理由。
 4. 需要改的项经用户确认后修改，再 build 0/0 + 依赖分析（不替代硬件验证）。
 

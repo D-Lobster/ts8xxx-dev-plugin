@@ -36,9 +36,9 @@ powershell -NoProfile -File "<skill-dir>\run_cli.ps1" rtt --duration 10
 2. 确认固件路径、目标探针/设备和 Flash 布局。
 3. 执行 `run_cli.ps1 flash --firmware <absolute-path>`（所有宿主同一入口）。
 4. 保存 flash/verify JSON 结果，再读取 RTT/UART 日志并验证目标行为。
-5. 模块完成或最终交付前，再补齐 code-quality、第二次 0/0 构建、依赖分析和终审证据。
+5. L2 补齐 APP 扫描、code-quality、第二次 0/0 构建、依赖与回归；L3 再独立终审。
 
-`workflow.ps1 gate` 仅保留为可选交付审计；不运行或审计失败都不阻止开发测试烧录。
+随包 pre_flash_gate.ps1 仅保留为可选交付审计；不运行或审计失败都不阻止开发测试烧录。
 
 ## 状态约束
 

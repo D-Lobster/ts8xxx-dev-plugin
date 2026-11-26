@@ -57,4 +57,4 @@ description: TS800X 项目内交接与状态持久化规范。用于 requirement
 5. 无硬件时使用 `PENDING_HARDWARE`，不能伪装成 PASS。
 6. 下一宿主从项目文件恢复，不依赖聊天历史或 Claude/Codex/Pi 私有缓存。
 
-`workflow.ps1` 管理 `context/module_status.json`；不要手工创造同义字段或平行状态文件。
+由当前执行 Skill 按真实证据更新 context/module_status.json；保留已有字段和 code_quality / build_after_code_quality，写后重新解析；不创造平行状态文件。

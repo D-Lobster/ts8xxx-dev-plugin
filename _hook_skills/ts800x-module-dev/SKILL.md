@@ -17,7 +17,7 @@ description: TS800X 单模块开发全闭环。先查 prebuilt/examples 和 SDK 
 ## 实现步骤
 
 1. 变更前运行依赖分析并检查符号冲突。
-2. 搜索目标项目 `ts800x_sdk/prebuilt_modules/`；可复用则优先复用。
+2. 先查目标项目已集成模块，再查 ts800x_sdk/prebuilt_modules/；可复用则优先复用。
 3. 搜索 SDK examples 和 `ts800x-code-reader`，核对真实 API 与已知缺陷。
 4. 定义最小 `.h` 接口；实现直接逻辑，不增加单调用者 wrapper、回调链或未来抽象。
 5. 遵循 R01-R29：静态分配、非阻塞、ISR 最小、函数 ≤50 行、调用深度 ≤3、LOG ASCII。
@@ -29,9 +29,9 @@ description: TS800X 单模块开发全闭环。先查 prebuilt/examples 和 SDK 
    并确认 **R29 编译配置**：Target 优化等级为 -O1（无按文件覆盖）、
    ISR 与主循环共享的标志为 `volatile`；改配置后须全量 Rebuild 并核对 `.dep`。
 6. 接入实际调度和 `.uvprojx`；仅生成未调用的文件不算集成（见下方集成诊断）。
-7. `workflow.ps1 verify-module` 执行初验构建（含 RAM 占用检查，见 R28）。
+7. 使用 ts800x-build 执行初验构建（含 RAM 占用检查，见 R28）。
 8. 按需通过 JLink/UART/OTA 快速验证；开发测试烧录不强制 Gate，写入后必须 verify/完整性确认。
-9. 运行 `ts800x-code-quality` 并记录证据，再次执行 `verify-module` 完成强制 Rebuild 和依赖报告。
+9. 运行随包 APP 扫描、ts800x-static-analysis 和 ts800x-code-quality 并记录证据，再用 ts800x-build 执行 Rebuild，使用 ts800x-dependency-analyzer 生成依赖报告。
 10. 按需再次烧录并完成日志、测试输入和人工观察；无硬件时记录测试步骤和验收标准。
 
 步骤 9-10 是模块完成检查。日常迭代在步骤 7 构建成功后即可烧录、读日志并继续修改，

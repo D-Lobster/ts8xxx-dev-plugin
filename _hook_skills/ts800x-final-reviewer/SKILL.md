@@ -9,11 +9,14 @@ description: TS800X 交付前独立终审。审查完整 diff、构建/依赖/�
 
 ## 必需输入
 
+按 WORKFLOW.md，仅正式交付或明确要求终审时启动；日常 L1 不强制执行。
+
+- 先读取本插件根 RULES/CODING_STANDARD.md 与 RULES/REVIEW_CHECKLIST.md；
 - 用户需求与验收标准；
 - 完整 `git diff`、状态和改动文件；
 - 最终 build 0/0、Keil 汇总、HEX/BIN 时间/大小/hash；
 - dependency report 与静态分析局限；
-- code-quality 结果和 R01-R29 自检；
+- code-quality 结果、APP 扫描原始 JSON、R01-R29 自检及 R24 人工复核；
 - 模块测试、日志、硬件 PASS/PENDING 状态；
 - 架构/模块 Spec、已知问题和回滚方案。
 
@@ -61,6 +64,7 @@ P0/P1 必须阻断；P2 是否阻断要结合验收标准并明确理由。PENDI
 - 已核验证据及命令；
 - 未验证项和残余风险；
 - 需求覆盖矩阵；
+- rules：R01-R29 每条单独记录 rule_id、status（PASS/FAIL/N/A/NOT_CHECKED）、evidence、file_line、method、exception；缺关键证据为 BLOCKED，不得把自动扫描未命中当成合规；
 - 下一步。
 
 保存为 `context/handoffs/<scope>/review_result.json`，重新解析后更新 `PROGRESS.md`。

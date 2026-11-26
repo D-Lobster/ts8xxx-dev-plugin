@@ -11,6 +11,7 @@ description: Audit and, when authorized, simplify TS800X application code after 
 
 - 明确目标文件与需求；
 - 模块已完成编译初验并有 0 Error / 0 Warning 证据；
+- 运行静态分析 Skill 的 APP 扫描，保存实际 JSON；对变更文件与命中项逐条复核。
 - 读取改动 diff、调用点和 `ts800x-coding-standard`；
 - 涉及旧代码移植时保留源/目标逐行 diff。
 
@@ -49,8 +50,7 @@ description: Audit and, when authorized, simplify TS800X application code after 
 1. 只改已确认的复杂度问题，逐项记录行为保持理由。
 2. 重新编译，要求 0 Error / 0 Warning 和新鲜产物。
 3. 比较修改前后 diff，运行依赖分析。
-4. 生成审计证据，并用：
-   `workflow.ps1 mark-code-quality -Evidence <report-or-evidence>`
+4. 将审计证据保存到目标项目 context/handoffs/<module>/，重新解析并更新 PROGRESS.md。
 5. 未通过再次编译时，不得标记模块完成或进入最终交付。
 
 不要把行数/深度注释写进每个生产函数；在审计报告中记录即可。
@@ -64,4 +64,3 @@ description: Audit and, when authorized, simplify TS800X application code after 
 - FAIL：存在行为风险、规范违规或验证缺失。
 
 没有硬件证据时只能声明“代码质量与编译检查通过，待硬件验证”。
-
