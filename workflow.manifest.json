@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "workflow_version": "2.2.2",
+  "workflow_version": "2.2.3",
   "canonical_root": ".",
   "policies": {
     "workflow": "WORKFLOW.md",

@@ -2,6 +2,17 @@
 
 版本号与 TS8XXX 工作流版本（`workflow.manifest.json` 的 `workflow_version`）保持一致。
 
+## v2.2.3
+
+修复插件管理器/市场安装路线下技能不注册的问题：
+
+- 预设声明为 `skill-filesystem` 补 `customSkillDirs`，指向包内 `_hook_skills`。
+  此前只有 `install.ps1` 的 Junction 路线能发现技能，市场安装完成后 24 个技能
+  目录已在盘上但不进入会话；
+- README 修正预设行 id（`preset-ts8xxx-dev`，原文误写 `preset-ts800x-dev`），
+  并新增两条安装路线的技能注册对照表（二选一，同时使用会重复列出）；
+- 技能、规则（R01-R29）、流程与本版无关改动为零；三处版本号保持一致。
+
 ## v2.2.2
 
 - 单一编码规范源、自动同步 Skill、逐条终审证据；R08 统一 Allman。
