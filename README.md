@@ -87,6 +87,15 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\ts8xxx-dev-plugin\install.
 .\install.ps1 -Uninstall
 ```
 
+## 两条安装路线的技能注册方式
+
+| 路线 | 预设来源 | 技能如何被发现 |
+|---|---|---|
+| 插件管理器 / 市场安装（bundle patch 层） | 包内 `cordis.patch.yml` | `skill-filesystem` 的 `customSkillDirs` 指向包内 `_hook_skills` |
+| `install.ps1`（ZIP / 本地 clone） | 合并进 profile patch 的托管块 | 每个技能以 Junction 链到 `%USERPROFILE%\.agents\skills` |
+
+两条路线**二选一**：同时使用会让同一技能被列出两次。
+
 ## 维护检查
 
 Node.js 运行 npm run sync:rules、npm run check:plugin、npm run test:app-audit；实际 APP 扫描入口见 ts800x-static-analysis。旧工作流仓库不再作为发布源。
@@ -116,7 +125,7 @@ Node.js 运行 npm run sync:rules、npm run check:plugin、npm run test:app-audi
 powershell -NoProfile -ExecutionPolicy Bypass -File .\ts8xxx-dev-plugin\install.ps1 -Check
 
 # 预设声明是否出现在组合配置中（profile 名按实际改）
-dsh --profile desktop --dump-config | Select-String preset-ts800x-dev
+dsh --profile desktop --dump-config | Select-String preset-ts8xxx-dev
 ```
 
 DSH 中新建会话 → 预设选「TS8XXX 系列开发」→ 输入「编译固件」或「烧录固件」，

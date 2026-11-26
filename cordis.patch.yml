@@ -99,6 +99,13 @@
             name: '@deepseek-ai/dsh-tool-jobs'
           - id: skill-filesystem
             name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              # Register the package's own skill directory so the plugin-manager
+              # route (bundle patch only) exposes the skills too. install.ps1
+              # links each skill into ~/.agents/skills instead; doing both would
+              # list every skill twice, so pick exactly one install route.
+              customSkillDirs:
+                - !!js process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('ts8xxx-dev-plugin')), '_hook_skills')
           - id: tool-skill
             name: '@deepseek-ai/dsh-tool-skill'
           - id: command-goal
