@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ts8xxx-development",
+  "version": "2.2.3",
+  "description": "TS8XXX 固件开发、审核和 Windows 工具工作流。",
+  "author": { "name": "D-Lobster" },
+  "repository": "https://github.com/D-Lobster/ts8xxx-dev-plugin",
+  "license": "MIT",
+  "extensions": {
+    "com.openai": {
+      "apps": "./.app.json",
+      "interface": {
+        "displayName": "TS8XXX 系列开发",
+        "shortDescription": "TS8XXX 固件开发与验证",
+        "longDescription": "使用与 DSH 同源的 24 个 Skill、R01–R29 和 L1/L2/L3 流程，通过已连接的 Remote Desktop Commander 调用 Windows 上的现有开发工具。",
+        "developerName": "D-Lobster",
+        "category": "Developer Tools",
+        "defaultPrompt": "加载 TS8XXX 工作流，使用 Remote Desktop Commander 只读核对 Windows 上的 DSH 插件版本。"
+      }
+    }
+  }
+}
